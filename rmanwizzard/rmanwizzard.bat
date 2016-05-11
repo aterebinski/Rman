@@ -38,11 +38,12 @@ echo       Uwaga 4: Wszystkie dane wprowadzone przez uæytkownika zostan• wprowad
 echo       do bazy w jednej iteracji pod koniec dziaàania skryptu. Wymagane b©dzie
 echo       wtedy ponowne uruchomienie bazy danych. 
 echo.
-echo       Uwaga 5: Jesli podczas dziaàania skryptu pojawiaj• si© bà©dy ORA-12560: 
-echo       TNS- bà•d adaptera protokoàu, podaj sciezke dostepu do katalogu bin serwera Oracle
-echo       jako drugi paramametr podczas wywolania skryptu:
-echo             quickrman.bat uæytkownik/hasào@instancja òcieæka
-echo        ,gdzie òcieæka - lokalizacja katalogu bin serwera bazy danych
+echo       Uwaga 5: Jesli podczas dziaàania skryptu pojawiaj• si© bà•d:
+echo              "ORA-12560: TNS- bà•d adaptera protokoàu",
+echo       podaj òcieæk© dostepu do katalogu bin serwera Oracle,
+echo       jako drugi parametr podczas wywoàania skryptu:
+echo             rmanwizzard.bat uæytkownik/hasào@instancja òcieæka
+echo        ,gdzie òcieæka - lokalizacja katalogu bin serwera bazy danych w podw¢jnym cudzysàowiu,
 echo       ze znakiem "\" na ko‰cu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\" 
 echo.
 echo.
@@ -132,7 +133,7 @@ echo MAKSYMALNA WILEKOóè FOLDERU Z OBSZAREM FRA: %rmanfrafolsize%
 :NOPRINT2
 if "%rmaniledod%" GEQ "1" echo óCIEZKA DO PIERWSZEGO DODATKOWEGO FOLDERU: %rmansciezka1%
 if "%rmaniledod%" GEQ "2" echo óCIEZKA DO DRUGIEGO DODATKOWEGO FOLDERU: %rmansciezka2%
-if "%rmaniledod%" GEQ "3" echo óCIEZKA DO TRZECIEGO DODATKOWEGO FOLD  ERU: %rmansciezka3%
+if "%rmaniledod%" GEQ "3" echo óCIEZKA DO TRZECIEGO DODATKOWEGO FOLDERU: %rmansciezka3%
 echo.
 echo.
 echo.
@@ -288,6 +289,8 @@ echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup as compressed backupset database to destination '%rmanparam%';>>skrypty\orders.sql
 echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup archivelog all to destination '%rmanparam%';>>skrypty\orders.sql
+echo backup spfile to destination '%rmanparam%';>>skrypty\orders.sql
+echo backup current controlfile to destination '%rmanparam%';>>skrypty\orders.sql
 rem echo backup spfile;>>skrypty\orders.sql
 rem echo crosscheck backup;>>skrypty\orders.sql
 rem echo crosscheck archivelog all;>>skrypty\orders.sql
@@ -298,12 +301,14 @@ goto KROK5c
 echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup as compressed backupset database;>>skrypty\orders.sql
 echo sql 'alter system switch logfile';>>skrypty\orders.sql
+echo backup spfile;>>skrypty\orders.sql
 echo backup archivelog all;>>skrypty\orders.sql
 rem echo backup spfile;>>skrypty\orders.sql
 echo crosscheck backup;>>skrypty\orders.sql
 echo crosscheck archivelog all;>>skrypty\orders.sql
 echo delete noprompt expired backupset;>>skrypty\orders.sql
 echo delete noprompt expired archivelog all;>>skrypty\orders.sql
+echo backup current controlfile;>>skrypty\orders.sql
 :KROK5c       
 %2rman target %1 @skrypty\orders.sql
 echo.
@@ -317,6 +322,8 @@ if exist skrypty\orders.sql del skrypty\orders.sql
 goto KROK6
 
 :KROK6
+echo.
+echo.
 echo.
 echo WST®PNA KONFIGURACJA TRYBU ARCHIVELOG ZOSTAùA ZAKO„CZONA.
 echo DALSZA KONFIGURACJA TRYBU ARCHIVELOG MOΩLIWA JEST POPRZEZ SKRYPT "quickrman.bat".
@@ -345,6 +352,7 @@ echo        hasào - hasào uæytkownika z prawami administratora
 echo        instancja - nazwa instancji bazy danych np. orcl
 echo        [òcieæka] - opcjonalny parametr - lokalizacja katalogu bin serwera bazy danych
 echo          ze znakiem "\" na ko‰cu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\"
+echo          ócieæka powinna byÜ podana w podw¢jnym cudzysàowiu (");
 echo.
 echo.
 pause

@@ -1,5 +1,5 @@
 @MODE CON COLS=100
-@rem MODE CON ROWS=1
+@MODE CON ROWS=1
 @echo off
 :CHECK
 IF "%1" == "" GOTO CREDENTIALS_ERROR
@@ -28,11 +28,12 @@ echo.
 echo       Uwaga 3: U¾ytkownik mo¾e w ka¾dej chwili zakoäczy† dziaˆanie skryptu, 
 echo       u¾ywaj¥c kombinacji klawiszy Ctrl + C.
 echo.
-echo       Uwaga 4: Jesli podczas dziaˆania skryptu pojawiaj¥ si© bˆ©dy ORA-12560: 
-echo       TNS- bˆ¥d adaptera protokoˆu, podaj sciezke dostepu do katalogu bin serwera Oracle
-echo       jako drugi paramametr podczas wywolania skryptu:
+echo       Uwaga 4: Jesli podczas dziaˆania skryptu pojawiaj¥ si© bˆ¥d:
+echo              "ORA-12560: TNS- bˆ¥d adaptera protokoˆu",
+echo       podaj ˜cie¾k© dostepu do katalogu bin serwera Oracle,
+echo       jako drugi parametr podczas wywoˆania skryptu:
 echo             quickrman.bat u¾ytkownik/hasˆo@instancja ˜cie¾ka
-echo        ,gdzie ˜cie¾ka - lokalizacja katalogu bin serwera bazy danych
+echo        ,gdzie ˜cie¾ka - lokalizacja katalogu bin serwera bazy danych w podw¢jnym cudzysˆowiu,
 echo       ze znakiem "\" na koäcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\" 
 echo.
 echo.
@@ -260,10 +261,12 @@ if "%userinp%"=="0" goto MENU
 if "%userinp%"=="1" goto M21
 if "%userinp%"=="2" goto M22
 rem if "%userinp%"=="3" goto M23
-if "%userinp%"=="3" goto M231
-if "%userinp%"=="4" goto M232
-if "%userinp%"=="5" goto M233
-if "%userinp%"=="6" goto M234
+if "%userinp%"=="3" goto M23
+if "%userinp%"=="4" goto M24
+if "%userinp%"=="5" goto M25
+if "%userinp%"=="6" goto M26
+if "%userinp%"=="7" goto M27
+if "%userinp%"=="8" goto M28
 echo invalid choice
 goto M2
 
@@ -369,7 +372,7 @@ del skrypty\orders.sql
 goto M2
 
 :M24
-REM Zmieä rozmieszczenie katalog¢w trybu ARCHIVELOG
+REM Zmieä parametr log_archive_dest_stat 
 cls
 echo.
 echo.
@@ -393,20 +396,20 @@ set userinp=
 set /p userinp=Wybierz opcj© i wcisnij ENTER:
 set userinp=%userinp:~0,2%
 if "%userinp%"=="0" goto M2
-if "%userinp%"=="1" goto M2321
-if "%userinp%"=="2" goto M2321
-if "%userinp%"=="3" goto M2321
-if "%userinp%"=="4" goto M2321
-if "%userinp%"=="5" goto M2321
-if "%userinp%"=="6" goto M2321
-if "%userinp%"=="7" goto M2321
-if "%userinp%"=="8" goto M2321
-if "%userinp%"=="9" goto M2321
-if "%userinp%"=="10" goto M2321
+if "%userinp%"=="1" goto M241
+if "%userinp%"=="2" goto M241
+if "%userinp%"=="3" goto M241
+if "%userinp%"=="4" goto M241
+if "%userinp%"=="5" goto M241
+if "%userinp%"=="6" goto M241
+if "%userinp%"=="7" goto M241
+if "%userinp%"=="8" goto M241
+if "%userinp%"=="9" goto M241
+if "%userinp%"=="10" goto M241
 echo invalid choice
 goto M24
 
-:M2321
+:M241
 set rmanparam=
 echo.
 echo PODAJ PARAMETR log_archive_dest_state_%userinp%:
@@ -419,15 +422,15 @@ echo      JE—LI NIE CHCESZ ZMIENIA TEJ OPCJI.
 echo.
 set /p rmanparam=Wprowad« parametr i wcisnij ENTER:
 echo.
-if "%rmanparam%"=="ENABLE" goto M2321a
-if "%rmanparam%"=="enable" goto M2321a
-if "%rmanparam%"=="DEFER" goto M2321a
-if "%rmanparam%"=="defer" goto M2321a
+if "%rmanparam%"=="ENABLE" goto M241a
+if "%rmanparam%"=="enable" goto M241a
+if "%rmanparam%"=="DEFER" goto M241a
+if "%rmanparam%"=="defer" goto M241a
 if "%rmanparam%"=="" goto M2
 if "%rmanparam%"=="exit" goto M2
-goto M2321
+goto M241
 
-:M2321a
+:M241a
 if exist skrypty\orders.sql del skrypty\orders.sql 
 echo spool quickrman.log>>skrypty\orders.sql
 echo alter system set log_archive_dest_state_%userinp%='%rmanparam%' scope=both;>>skrypty\orders.sql
@@ -459,17 +462,18 @@ set /p rmanfrafoldest=SCIEZKA:
 if "%rmanfrafoldest%"=="" goto M2 
 echo.
 echo.
-if NOT EXIST %rmanfrafoldest% md %rmanfrafoldest%  
-if exist skrypty\orders.sql del skrypty\orders.sql 
+if NOT EXIST %rmanfrafoldest% md %rmanfrafoldest%
+if exist skrypty\orders.sql del skrypty\orders.sql
 echo spool quickrman.log>>skrypty\orders.sql
 echo alter system set db_recovery_file_dest='' scope=both;>>skrypty\orders.sql  
-if "%rmanfrafoldest%"<>"" echo alter system set db_recovery_file_dest='%rmanfrafoldest%' scope=both;>>skrypty\orders.sql
+if NOT "%rmanfrafoldest%"=="" echo alter system set db_recovery_file_dest="%rmanfrafoldest%" scope=both;>>skrypty\orders.sql
 echo spool off>>skrypty\orders.sql
-echo exit>>skrypty\orders.sql    
+echo exit>>skrypty\orders.sql
 %2sqlplus %1 @skrypty\orders.sql
 echo.
 pause
 del skrypty\orders.sql
+goto M2
 
 :M26
 set rmanparam=
@@ -488,8 +492,8 @@ if "%rmanparam%"=="" goto M2
 
 if exist skrypty\orders.sql del skrypty\orders.sql 
 echo spool quickrman.log>>skrypty\orders.sql
-echo alter system set db_recovery_file_dest='' scope=both;>>skrypty\orders.sql
-if "%rmanparam%"<>"" echo alter system set db_recovery_file_dest_size=%rmanparam% scope=both;>>skrypty\orders.sql  
+rem echo alter system set db_recovery_file_dest_size='' scope=both;>>skrypty\orders.sql
+if NOT "%rmanparam%"=="" echo alter system set db_recovery_file_dest_size=%rmanparam% scope=both;>>skrypty\orders.sql  
 echo spool off>>skrypty\orders.sql
 echo exit>>skrypty\orders.sql    
 %2sqlplus %1 @skrypty\orders.sql
@@ -508,7 +512,7 @@ if "%rmanparam%"=="" goto M2
 echo.
 if exist skrypty\orders.sql del skrypty\orders.sql 
 echo spool quickrman.log>>skrypty\orders.sql
-echo alter system set log_archive_format='%rmanparam%' scope=both;>>skrypty\orders.sql
+echo alter system set log_archive_format='%rmanparam%' scope=spfile;>>skrypty\orders.sql
 rem wyˆ¥czenie i wˆ¥czenie bazy 
 rem echo shutdown immediate>>skrypty\orders.sql
 rem echo startup mount>>skrypty\orders.sql
@@ -601,7 +605,7 @@ set userinp1=%userinp1:~0,2%
 :M32a
 echo.
 set userinp2=
-set /p userinp2=Podaj scie¾k© dost©pu do nowego pliku redolog i nacisnij ENTER:
+set /p userinp2=Podaj nazw© nowego pliku redolog wraz z scie¾k¥ dost©pu i nacisnij ENTER:
 if "%userinp2%"=="" goto M32a
 :M32b
 echo.
@@ -754,7 +758,8 @@ echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup as compressed backupset database to destination '%rmanparam%';>>skrypty\orders.sql
 echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup archivelog all to destination '%rmanparam%';>>skrypty\orders.sql
-rem echo backup current controlfile to destination '%rmanparam%';>>skrypty\orders.sql
+echo backup spfile to destination '%rmanparam%';>>skrypty\orders.sql
+echo backup current controlfile to destination '%rmanparam%';>>skrypty\orders.sql
 rem echo backup spfile;>>skrypty\orders.sql
 rem echo crosscheck backup;>>skrypty\orders.sql
 rem echo crosscheck archivelog all;>>skrypty\orders.sql
@@ -766,6 +771,7 @@ echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup as compressed backupset database;>>skrypty\orders.sql
 echo sql 'alter system switch logfile';>>skrypty\orders.sql
 echo backup archivelog all;>>skrypty\orders.sql
+echo backup spfile;>>skrypty\orders.sql
 rem echo backup spfile;>>skrypty\orders.sql
 echo crosscheck backup;>>skrypty\orders.sql
 echo crosscheck archivelog all;>>skrypty\orders.sql
@@ -797,7 +803,8 @@ echo        u¾ytkownik - to nazwa u¾ytkownika z prawami administratora np. syste
 echo        hasˆo - hasˆo u¾ytkownika z prawami administratora
 echo        instancja - nazwa instancji bazy danych np. orcl
 echo        [˜cie¾ka] - opcjonalny parametr - lokalizacja katalogu bin serwera bazy danych
-echo          ze znakiem "\" na koäcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\"
+echo          ze znakiem "\" na koäcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\".
+echo          —cie¾ka powinna by† podana w podw¢jnym cudzysˆowiu (");
 echo.
 echo.
 pause

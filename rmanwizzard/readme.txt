@@ -19,11 +19,11 @@ Uwaga 3: U¿ytkownik mo¿e w ka¿dej chwili zakoñczyæ dzia³anie skryptu, u¿ywaj¹c k
 
 Uwaga 4: Wszystkie dane wprowadzone przez u¿ytkownika zostan¹ wprowadzone do bazy w jednej iteracji pod koniec dzia³ania skryptu. Wymagane bêdzie wtedy ponowne uruchomienie bazy danych. 
 
-Uwaga 5: Jesli podczas dzia³ania skryptu pojawiaj¹ siê b³êdy ORA-12560: 
-	 TNS- b³¹d adaptera protoko³u, podaj sciezke dostepu do katalogu bin serwera Oracle
-	 jako drugi paramametr podczas wywolania skryptu:
-		quickrman.bat u¿ytkownik/has³o@instancja œcie¿ka
-	 ,gdzie œcie¿ka - lokalizacja katalogu bin serwera bazy danych
+Uwaga 5: Jesli podczas dzia³ania skryptu pojawia siê b³¹d:
+            "ORA-12560: TNS- b³¹d adaptera protoko³u",
+	 podaj œcie¿kê dostepu do katalogu bin serwera Oracle jako drugi parametr podczas wywo³ania skryptu:
+		rmanwizzard.bat u¿ytkownik/has³o@instancja œcie¿ka
+	 ,gdzie œcie¿ka - lokalizacja katalogu bin serwera bazy danych w podwójnym cudzys³owiu,
 	 ze znakiem "\" na koñcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\" 
 ...................................................................................................
 
@@ -31,11 +31,12 @@ U¯YCIE: w celu u¿ycia skryptu nale¿y wykonaæ komendê:
 	quickrman.bat u¿ytkownik/has³o@instancja [œcie¿ka]
 
 	gdzie:
-	u¿ytkownik - to nazwa u¿ytkownika z prawami administratora np. system
-	has³o - has³o u¿ytkownika z prawami administratora
-	instancja - nazwa instancji bazy danych np. orcl
-	[œcie¿ka] - opcjonalny parametr - lokalizacja katalogu bin serwera bazy danych
+	u¿ytkownik - to nazwa u¿ytkownika z prawami administratora np. system,
+	has³o - has³o u¿ytkownika z prawami administratora,
+	instancja - nazwa instancji bazy danych np. orcl,
+	[œcie¿ka] - opcjonalny parametr - lokalizacja katalogu bin serwera bazy danych.
 		    ze znakiem "\" na koñcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\"
+                    Œcie¿ka powinna byæ podana w podwójnym cudzys³owiu (").
 
 
 
@@ -52,7 +53,7 @@ W drugim kroku nale¿y okreœliæ, w ilu dodatkowych folderach maj¹ byæ przechowywa
 
 W trzecim kroku zostaj¹ przedstawione wszystkie parametry wprowadzone przez u¿ytkownika. Do tej pory wszystkie dane nie zosta³y wprowadzone do bazy. Zostaje postawione pytanie, czy na pewno wprowadziæ dane do systemu. Jeœli odpowiedŸ jest twierdz¹ca, u¿ytkownik zostaje poproszony o podanie identyfikatora SID instancji. Po wprowadzeniu identyfikatora SID instancji, skrypt zmienia parametry bazy na podstawie danych wprowadzonych przez u¿ytkownika. Logi z tej operacji bêd¹ znajdowa³y siê w pliku rmanwizzard.log.
 Uwaga: Po wykonaniu trzeciego kroku baza danych zostanie ponownie uruchomiona. Spowoduje to roz³¹czenie sesji u¿ytkowników pracuj¹cych aktualnie na bazie danych.
-Równie¿ w tym kroku w katalogu "c:\archskrypt" zostaj¹ umieszczone pliki "backup.sql" i "backup.bat" s³u¿¹ce do wykonywania pe³nej kopii zapasowej. Pliki mo¿na przenieœæ w inne miejsce. Jeœli z jakichœ powodów pliki nie zostan¹ skopiowane, znajduj¹ siê one w podkatalogu katalogu "skrypty" bie¿¹cego folderu. Aby skonfigurowaæ automatyczne wykonywanie kopii zapasowej, nale¿y dodaæ wykonywanie pliku backup.bat do "Harmonogramu zadañ" lub do "Zaplanowanych zadañ".
+Równie¿ w tym kroku w katalogu "c:\archskrypt" zostaj¹ umieszczone pliki "backup.sql" i "backup.bat" s³u¿¹ce do wykonywania pe³nej kopii zapasowej. Pliki mo¿na przenieœæ w inne miejsce. Aby skonfigurowaæ automatyczne wykonywanie kopii zapasowej, nale¿y dodaæ wykonywanie pliku backup.bat do "Harmonogramu zadañ" lub do "Zaplanowanych zadañ".
 
 W czwartym kroku u¿ytkownik ma mo¿liwoœæ wykonania pe³nego backupu. Jest to czynnoœæ zalecana z uwagi na to, i¿ w przypadku awarii dysku, odtworzenie bazy z archivelogów na innym serwerze, wymaga posiadania pe³nej kopii bazy danych. Skrypt zapyta siê o miejsce docelowe, gdzie ma zapisaæ pe³n¹ kopiê bazy danych. Jeœli u¿ytkownik nie poda lokalizacji, kopia bazy zapisze siê w domyœlnej lokalizacji. Jeœli podana lokalizacja nie bêdzie istnia³a, skrypt stworzy odpowiedni katalog.
 

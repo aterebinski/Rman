@@ -16,11 +16,11 @@ Uwaga 2: W przypadku pierwszej konfiguracji trybu Archivelog na serwerze, zaleca
 
 Uwaga 3: U¿ytkownik mo¿e w ka¿dej chwili zakoñczyæ dzia³anie skryptu, u¿ywaj¹c kombinacji klawiszy Ctrl + C.
 
-Uwaga 4: Jesli podczas dzia³ania skryptu pojawiaj¹ siê b³êdy ORA-12560: 
-	 TNS- b³¹d adaptera protoko³u, podaj sciezke dostepu do katalogu bin serwera Oracle
-	 jako drugi paramametr podczas wywolania skryptu:
+Uwaga 4: Jesli podczas dzia³ania skryptu pojawia siê b³¹d:
+            "ORA-12560: TNS- b³¹d adaptera protoko³u",
+	 podaj œcie¿kê dostepu do katalogu bin serwera Oracle jako drugi parametr podczas wywo³ania skryptu:
 		quickrman.bat u¿ytkownik/has³o@instancja œcie¿ka
-	 ,gdzie œcie¿ka - lokalizacja katalogu bin serwera bazy danych
+	 ,gdzie œcie¿ka - lokalizacja katalogu bin serwera bazy danych w podwójnym cudzys³owiu,
 	 ze znakiem "\" na koñcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\" 
 ..................................................................................................
 
@@ -28,11 +28,12 @@ U¯YCIE: w celu u¿ycia skryptu nale¿y wykonaæ komendê:
 	quickrman.bat u¿ytkownik/has³o@instancja [œcie¿ka]
 
 	gdzie:
-	u¿ytkownik - to nazwa u¿ytkownika z prawami administratora np. system
-	has³o - has³o u¿ytkownika z prawami administratora
-	instancja - nazwa instancji bazy danych np. orcl
+	u¿ytkownik - to nazwa u¿ytkownika z prawami administratora np. system,
+	has³o - has³o u¿ytkownika z prawami administratora,
+	instancja - nazwa instancji bazy danych np. orcl,
 	[œcie¿ka] - opcjonalny parametr - lokalizacja katalogu bin serwera bazy danych
-		    ze znakiem "\" na koñcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\"
+		    ze znakiem "\" na koñcu, np. "c:\app\Administrator\product\11.2.0\dbhome_1\BIN\".
+                    Œcie¿ka powinna byæ podana w podwójnym cudzys³owiu (").
 
 
 
@@ -55,26 +56,27 @@ A. KONFIGURACJA TRYBU ARCHIVELOG.
      c) DB_RECOVERY_FILE_DEST - parametr ten okreœla po³o¿enie katalogu z obszarem FRA (Flash Recovery Area), zawieraj¹cego nie tylko zarchiwizowane dzienniki powtórzeñ, ale tak¿e pe³ne kopie bazy danych, kopie przyrostowe, kopie zarchiwizowanych dzienników powtórzeñ, kopie zapasowe pliku kontrolnego i pliku parametrów.
      d) DB_RECOVERY_FILE_DEST_SIZE - okreœla maksymalny rozmiar folderu zawieraj¹cego FRA. 
         Uwaga!: Jeœli wielkoœæ katalogu przekroczy wielkoœæ zdefiniowan¹ w tym parametrze, baza danych zatrzyma siê. W przypadku takiej sytuacji, aby ponownie uruchomiæ bazê danych, trzeba zwiêkszyæ parametr DB_RECOVERY_FILE_DEST_SIZE, wy³¹czyæ tryb Archivelog lub usun¹æ fizycznie czêœæ plików w obszarze FRA. W przypadku okreœlania parametru DB_RECOVERY_FILE_DEST_SIZE, nale¿y dodaæ literê "G" lub "M" w celu poinformowania silnika bazy danych o jednostkach wielkoœci folderu (np. 100G - 100 gigabajtów).
-     e) LOG_ARCHIVE_FORMAT - okreœla szablon nazw u¿ywany dla zarchiwizowanych dzienników powtórzeñ.
+     e) LOG_ARCHIVE_FORMAT - okreœla szablon nazw u¿ywany dla zarchiwizowanych dzienników powtórzeñ, gdzie %S - numer sekwencji, %R - resetlogs ID, %T - numer w¹tku. Ten parametr mo¿e byæ zmieniony jedynie w pliku SPFILE.
      f) LOG_ARCHIVE_MIN_SUCCEED_DEST - okreœla minimaln¹ liczbê kopii katalogów docelowych zarchiwizowanych dzienników powtórzeñ, które musz¹ byæ wykonane, aby Oracle móg³ ponownie wykorzystaæ wybrany bie¿¹cy dziennik powtórzeñ.
 
 3. Sprawdzenie/Konfiguracja plików Redolog.
    W tym miejscu u¿ytkownik mo¿e sprawdziæ parametry plików dziennika powtórzeñ (redolog) w dwóch zestawieniach. Pierwsze pokazuje po³o¿enie plików z odpowiednich grup redolog oraz ich status (online, offline).
    Drugie zestawienie pozwala zorientowaæ siê m.in. w statusie, wielkoœci i numerze sekwencji poszczególnych redologów.
-   Poni¿ej znajduje siê menu, dziêki któremu mo¿emy prze³¹czyæ redolog na kolejny oraz dodaæ lub usun¹æ redolog. 
+   Poni¿ej znajduje siê menu, dziêki któremu mo¿emy prze³¹czyæ redolog na kolejny oraz dodaæ lub usun¹æ redolog.
+4. Sprawdzenie parametrów programu RMAN.
 
 B. ZARZ¥DZANIE KOPIAMI BEZPIECZEÑSTWA.
 
-4. Sprawdzanie zajêtoœci obszaru FRA.
+5. Sprawdzanie zajêtoœci obszaru FRA.
    Wybieraj¹c ta opcjê, u¿ytkownik mo¿e sprawdziæ rozmiar, jaki zajmuje obszar Flash Recovery Area.   Pierwsze zestawienie ukazuje nam: œcie¿kê do obszaru FRA (parametr DB_RECOVERY_FILE_DEST), limit wielkoœci obszaru FRA w MB (ustalany na podstawie parametru DB_RECOVERY_FILE_DEST_SIZE), wielkoœæ aktualnych danych w obszarze FRA, wielkoœæ przestarza³ych danych w obszarze FRA oraz iloœæ plików w obszarze FRA.
    Drugie, bardziej szczegó³owe zestawienie pokazuje procentowy udzia³ plików u¿ytych (PERCENT_SPACE_USED)i przeznaczonych do usuniêcia (PERCENT_SPACE_RECLAIMABLE), w stosunku do zadeklarowanej, ca³kowitej wielkoœci obszaru FRA (parametr DB_RECOVERY_FILE_DEST_SIZE) oraz iloœæ tych plików podzielonych na rodzaje(pliki kontrolne, pliki zarchiwizowane dzienniki powtórzeñ, itd.).   
      
-5. Sprawdzenie listy plików przestarza³ych (do usuniêcia) we FRA.
+6. Sprawdzenie listy plików przestarza³ych (do usuniêcia) we FRA.
    W tym miejscu u¿ytkownik mo¿e przejrzeæ listê plików ze statusem "OBSOLETE" (przestarza³y). S¹ to pliki, z  których dane znajduj¹ siê ju¿ w nowszych kopiach bezpieczeñstwa.
-6. Usuwanie przestarza³ych plików z FRA
+7. Usuwanie przestarza³ych plików z FRA
    Ta opcja pozwala usun¹æ niepotrzebne, przestarza³e pliki kopii bezpieczeñstwa.
-7. Wykonanie pe³nego BACKUPu.
-   Wybieraj¹c t¹ opcjê u¿ytkownik ma mo¿liwoœæ wykonania pe³nej kopii bazy danych. Skrypt zapyta siê o miejsce docelowe, gdzie ma zapisaæ pe³n¹ kopiê bazy danych. Jeœli podana lokalizacja nie bêdzie istnia³a, skrypt stworzy odpowiedni katalog. Pe³na kopia zawiera: pliki z przestrzeniami tabel, plik kontrolny i plik  SPFILE. W pliku z rozszerzeniem BK1 znajduje siê kopia przestrzeni tabel, natomiast W pliku z rozszerzeniem BK2 znajduje siê kopia pliku kontrolnego i pliku SPFILE.
+8. Wykonanie pe³nego BACKUPu.
+   Wybieraj¹c t¹ opcjê u¿ytkownik ma mo¿liwoœæ wykonania pe³nej kopii bazy danych. Skrypt zapyta siê o miejsce docelowe, gdzie ma zapisaæ pe³n¹ kopiê bazy danych. Jeœli u¿ytkownik nie poda lokalizacji, kopia bazy zapisze siê w domyœlnej lokalizacji. Jeœli podana lokalizacja nie bêdzie istnia³a, skrypt stworzy odpowiedni katalog.
 
 
 ród³o:
