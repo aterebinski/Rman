@@ -7,4 +7,4 @@ crosscheck backup;
 crosscheck archivelog all; 		
 delete noprompt archivelog all completed before 'sysdate -2';
 delete noprompt obsolete recovery window of 2 days;
- 
+backup current controlfile;
