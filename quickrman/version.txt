@@ -1,0 +1,7 @@
+v.1.1
+- dodanie dodatkowego, opcjonalnego parametru podczas uruchamiania skryptu
+v.1.2
+- usuwanie bugów
+v.1.3
+- zmiana parametrów pe³nego backupu
+- dodanie mo¿liowœci sprawdzenia parametrów programu RMAN

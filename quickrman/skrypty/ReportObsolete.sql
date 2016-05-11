@@ -1,0 +1,2 @@
+report obsolete;
+exit

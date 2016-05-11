@@ -1,0 +1,23 @@
+select name, value from v$parameter where name like 'log_archive_dest_1';
+select name, value from v$parameter where name like 'log_archive_dest_state_1';
+select name, value from v$parameter where name like 'log_archive_dest_2';
+select name, value from v$parameter where name like 'log_archive_dest_state_2';
+select name, value from v$parameter where name like 'log_archive_dest_3';
+select name, value from v$parameter where name like 'log_archive_dest_state_3';
+select name, value from v$parameter where name like 'log_archive_dest_4';
+select name, value from v$parameter where name like 'log_archive_dest_state_4';
+select name, value from v$parameter where name like 'log_archive_dest_5';
+select name, value from v$parameter where name like 'log_archive_dest_state_5';
+select name, value from v$parameter where name like 'log_archive_dest_6';
+select name, value from v$parameter where name like 'log_archive_dest_state_6';
+select name, value from v$parameter where name like 'log_archive_dest_7';
+select name, value from v$parameter where name like 'log_archive_dest_state_7;
+select name, value from v$parameter where name like 'log_archive_dest_8';
+select name, value from v$parameter where name like 'log_archive_dest_state_8';
+select name, value from v$parameter where name like 'log_archive_dest_9';
+select name, value from v$parameter where name like 'log_archive_dest_state_9';
+select name, value from v$parameter where name like 'log_archive_dest_10';
+select name, value from v$parameter where name like 'log_archive_dest_state_10';
+select name, value from v$parameter where name like 'db_recovery_file_dest';
+select name, display_value, value from v$parameter where name like 'db_recovery_file_dest_size';
+exit

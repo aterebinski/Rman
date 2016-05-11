@@ -1,0 +1,2 @@
+show parameter db_recovery_file_dest;
+exit

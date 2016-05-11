@@ -1,0 +1,3 @@
+show parameter log_archive_format;
+show parameter log_archive_min_succeed_dest;
+exit

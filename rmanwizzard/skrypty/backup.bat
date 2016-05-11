@@ -1,0 +1,1 @@
+rman @backup.sql
